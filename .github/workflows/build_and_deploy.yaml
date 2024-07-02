@@ -46,8 +46,8 @@ jobs:
       - name: ls after
         run: ls
 
-  build_client:
-    name: "Build Client"
+  build_react_client:
+    name: "Build React Client"
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -83,8 +83,45 @@ jobs:
             client/build/
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
+  build_gql_client:
+    name: "Build GraphQL Client"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        # We keep Script files in the scripts directory.
+        working-directory: ./graphql-client/
+    steps:
+      - name: Checkout the repository to the runner
+        uses: actions/checkout@v4
+      - name: pwd
+        run: pwd
+      - name: ls before
+        run: ls
+      - name: package
+        run: |
+          npm install
+          npm run codegen
+          npm run build
+      - name: ls after
+        run: |
+          echo root-dir
+          ls .
+          echo src-dir
+          ls ./src
+          echo dist-dir
+          ls ./dist
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: built_client
+          retention-days: 1
+          path: |
+            graphql-client/dist/
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+
   terraform:
-    needs: [build_server, build_client]
+    needs: [build_server, build_react_client, build_gql_client]
     name: "Terraform"
     runs-on: ubuntu-latest
     defaults:
