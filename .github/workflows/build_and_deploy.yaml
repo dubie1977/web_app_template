@@ -207,7 +207,7 @@ jobs:
         run: terraform apply -auto-approve -input=false
 
   upload_client:
-    needs: [terraform, build_client]
+    needs: [terraform, build_react_client]
     name: "Upload Client"
     runs-on: ubuntu-latest
     defaults:
