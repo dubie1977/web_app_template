@@ -76,7 +76,7 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@v4
         with:
-          name: built_client
+          name: built_react_client
           retention-days: 1
           path: |
             client/client.zip
@@ -119,7 +119,7 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@v4
         with:
-          name: built_client
+          name: built_graph_client
           retention-days: 1
           path: |
             graphql-client/dist/
@@ -151,7 +151,7 @@ jobs:
           ls ../built_server
           echo 
           echo client-dir
-          ls ../built_client
+          ls ../built_react_client
 
       - name: Setup Terraform with specified version on the runner
         uses: hashicorp/setup-terraform@v2
@@ -225,11 +225,20 @@ jobs:
       - name: Download Functions
         uses: actions/download-artifact@v4
 
-      - name: S3 upload
+      - name: S3 react upload
         uses: shallwefootball/s3-upload-action@master
         with:
           aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_bucket: "us-west-2-new-gql-client"
-          source_dir: "built_client/build/"
+          source_dir: "built_react_client/build/"
           destination_dir: ""
+
+      - name: S3 graphql upload
+        uses: shallwefootball/s3-upload-action@master
+        with:
+          aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_bucket: "us-west-2-new-gql-client"
+          source_dir: "built_react_client/build/"
+          destination_dir: "graphql"
