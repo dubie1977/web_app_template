@@ -1,7 +1,6 @@
-schema: "../schema.graphql"
-# documents: "./src/graphql/*.graphql.ts"
+schema: "https://swapi-graphql.netlify.app/.netlify/functions/index"
 generates:
-  ./src/graphql/types.ts:
+  ./src/gql/types.ts:
     plugins:
       - typescript
       - typescript-operations
