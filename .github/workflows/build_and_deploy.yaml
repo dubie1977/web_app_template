@@ -100,13 +100,13 @@ jobs:
         run: ls
       - name: package
         run: |
-          echo install packages
+          echo starting package install
           npm install
           echo 
-          echo codegen
+          echo starting codegen
           npm run codegen
           echo
-          echo build
+          echo start build
           npm run build
       - name: ls after
         run: |
