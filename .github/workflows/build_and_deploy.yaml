@@ -232,7 +232,7 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_bucket: "us-west-2-new-gql-client"
           source_dir: "built_react_client/build/"
-          destination_dir: ""
+          destination_dir: "react"
 
       - name: S3 graphql upload
         uses: shallwefootball/s3-upload-action@master
@@ -241,4 +241,4 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_bucket: "us-west-2-new-gql-client"
           source_dir: "built_graphql_client/"
-          destination_dir: "graphql"
+          destination_dir: ""
