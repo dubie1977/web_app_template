@@ -1,7 +1,9 @@
 **/.DS_Store
+**/tanstack-react-query
+**/dist
 
 # dependencies
-/node_modules
+**/node_modules
 /.pnp
 .pnp.js
 

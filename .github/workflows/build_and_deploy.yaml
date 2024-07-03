@@ -46,8 +46,8 @@ jobs:
       - name: ls after
         run: ls
 
-  build_client:
-    name: "Build Client"
+  build_react_client:
+    name: "Build React Client"
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -76,15 +76,57 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@v4
         with:
-          name: built_client
+          name: built_react_client
           retention-days: 1
           path: |
             client/client.zip
             client/build/
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
+  build_gql_client:
+    name: "Build GraphQL Client"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        # We keep Script files in the scripts directory.
+        working-directory: ./graphql-client/
+    steps:
+      - name: Checkout the repository to the runner
+        uses: actions/checkout@v4
+      - name: pwd
+        run: pwd
+      - name: ls before
+        run: ls
+      - name: package
+        run: |
+          echo starting package install
+          npm install
+          echo 
+          echo starting codegen
+          npm run codegen
+          echo
+          echo start build
+          npm run build
+      - name: ls after
+        run: |
+          echo root-dir
+          ls .
+          echo src-dir
+          ls ./src
+          echo dist-dir
+          ls ./dist
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: built_graphql_client
+          retention-days: 1
+          path: |
+            graphql-client/dist/
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+
   terraform:
-    needs: [build_server, build_client]
+    needs: [build_server, build_react_client, build_gql_client]
     name: "Terraform"
     runs-on: ubuntu-latest
     defaults:
@@ -109,7 +151,7 @@ jobs:
           ls ../built_server
           echo 
           echo client-dir
-          ls ../built_client
+          ls ../built_react_client
 
       - name: Setup Terraform with specified version on the runner
         uses: hashicorp/setup-terraform@v2
@@ -170,7 +212,7 @@ jobs:
         run: terraform apply -auto-approve -input=false
 
   upload_client:
-    needs: [terraform, build_client]
+    needs: [terraform, build_react_client]
     name: "Upload Client"
     runs-on: ubuntu-latest
     defaults:
@@ -183,11 +225,20 @@ jobs:
       - name: Download Functions
         uses: actions/download-artifact@v4
 
-      - name: S3 upload
+      - name: S3 react upload
         uses: shallwefootball/s3-upload-action@master
         with:
           aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_bucket: "us-west-2-new-gql-client"
-          source_dir: "built_client/build/"
+          source_dir: "built_react_client/build/"
+          destination_dir: "react"
+
+      - name: S3 graphql upload
+        uses: shallwefootball/s3-upload-action@master
+        with:
+          aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_bucket: "us-west-2-new-gql-client"
+          source_dir: "built_graphql_client/"
           destination_dir: ""

@@ -1,0 +1,12 @@
+schema: "https://swapi-graphql.netlify.app/.netlify/functions/index"
+generates:
+  ./src/gql/types.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+    config:
+      scalars:
+        DateTime: Date
+        Money: number
+        EmailAddress: string
+        GTIN: string

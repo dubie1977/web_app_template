@@ -1,0 +1,30 @@
+{
+  "name": "react-tanstack-react-query",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@tanstack/react-query": "4.33.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^18.11.18",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.10",
+    "@vitejs/plugin-react": "^3.1.0",
+    "cypress": "12.17.4",
+    "prettier": "^3.3.2",
+    "serve": "14.2.3",
+    "start-server-and-test": "2.0.3",
+    "typescript": "5.2.2",
+    "vite": "^4.1.0"
+  },
+  "scripts": {
+    "codegen": "graphql-codegen --config codegen.ts",
+    "dev": "vite",
+    "build": "vite build",
+    "start": "serve -s dist"
+  }
+}
