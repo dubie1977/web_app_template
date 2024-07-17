@@ -5,7 +5,11 @@ const config: CodegenConfig = {
   schema: "https://swapi-graphql.netlify.app/.netlify/functions/index",
   documents: ["src/**/*.tsx", "!src/gql/**/*"],
   generates: {
+    "./src/gql2/types.ts": {
+      plugins: ["typescript"],
+    },
     "./src/gql/": {
+      plugins: ["typescript"],
       preset: "client",
       config: {
         documentMode: "string",
